@@ -1,6 +1,6 @@
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Field, Div, ButtonHolder
-crispy_forms.bootstrap import FormAction
+from crispy_forms.bootstrap import FormActions
 from django import forms
 from django.forms.fields import DateField
 from django.forms.widgets import SelectDateWidget
