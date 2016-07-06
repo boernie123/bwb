@@ -1,5 +1,5 @@
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit, Layout, Field, Div
+from crispy_forms.layout import Submit, Layout, Field, Div, ButtonHolder
 from django import forms
 from django.forms.fields import DateField
 from django.forms.widgets import SelectDateWidget
@@ -9,7 +9,7 @@ from django.db.models import Q
 from operator import or_
 from functools import reduce
 
-from register.models import Candidate, Bicycle
+from register.models import Candidate, Bicycle, UserRegistration
 
 
 EMPTY_CHOICE = ('', '---------'),
@@ -19,6 +19,10 @@ class CandidateFilter(FilterSet):
     name = MethodFilter(action='name_filter', help_text="")
     status = ChoiceFilter(choices=EMPTY_CHOICE + Candidate.CANDIDATE_STATUS,
                           help_text="")
+    bicycle_kind = ChoiceFilter(name='user_registration__bicycle_kind',
+                                choices=EMPTY_CHOICE +
+                                UserRegistration.BICYCLE_CHOICES,
+                                help_text="")
 
     def __init__(self, *args, **kwargs):
         super(CandidateFilter, self).__init__(*args, **kwargs)
@@ -26,19 +30,23 @@ class CandidateFilter(FilterSet):
         self.helper = FormHelper()
         self.helper.form_method = 'get'
 
-        layout = Div(Div(Field('name'),
-                         css_class='col-xs-12 col-md-6'),
+        layout = Div(Div(Div(Field('name'),
+                         css_class='col-xs-12 col-md-5'),
                      Div(Field('status'),
-                         css_class='col-xs-12 col-md-6'))
+                         css_class='col-xs-12 col-md-3'),
+                     Div(Field('bicycle_kind'),
+                         css_class='col-xs-12 col-md-4'),
+                     css_class='row'),
+                     ButtonHolder(Submit('submit', 'Filter',
+                                  css_class='btn-info'))
+                 )
 
         self.helper.layout = Layout(*layout)
 
-        self.helper.add_input(Submit('submit', 'Filter',
-                                     css_class='btn-info'))
 
     class Meta:
         model = Candidate
-        fields = ['name', 'status']
+        fields = ['name', 'status', 'bicycle_kind']
 
     def name_filter(self, queryset, value):
         if value:
