@@ -1,5 +1,6 @@
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, Field, Div, ButtonHolder
+crispy_forms.bootstrap import FormAction
 from django import forms
 from django.forms.fields import DateField
 from django.forms.widgets import SelectDateWidget
@@ -37,8 +38,7 @@ class CandidateFilter(FilterSet):
                      Div(Field('bicycle_kind'),
                          css_class='col-xs-12 col-md-4'),
                      css_class='row'),
-                     ButtonHolder(Submit('submit', 'Filter',
-                                  css_class='btn-info'))
+                     FormAction(Submit('submit', 'Filter'))
                  )
 
         self.helper.layout = Layout(*layout)
